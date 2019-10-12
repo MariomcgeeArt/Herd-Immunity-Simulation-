@@ -139,6 +139,23 @@ class Simulation(object):
     
     
     def time_step(self):
+    #Hllp from Ben Lafferty https://github.com/tempor1s/herd-immunity/blob/master/simulation.py
+        
+        interaction = 0
+
+        
+        interaction += 1
+
+          living_people = [x for x in self.population if x.is_alive]
+
+        for person in living_people:
+            interaction = 0
+            if person.infection:
+                while interaction <= 100:
+                    rand_person = random.choice(living_people)
+                    self.interaction(person, rand_person)
+                    interaction += 1
+
         ''' This method should contain all the logic for computing one time step
         in the simulation.
 
@@ -164,23 +181,21 @@ class Simulation(object):
             person1 (person): The initial infected person
             random_person (person): The person that person1 interacts with.
         '''
-        # Assert statements are included to make sure that only living people are passed
-        # in as params
+      
         assert person.is_alive == True
         assert random_person.is_alive == True
+            int1= random.uniform(0.0,1.0)
+   
+            if random_person.is_vaccinated:
+                print("add logger")
+          
+            elif random_person.is_infected:
+                print('add logger')
+      
+            elif random_person.is_alive and random_person.is_vaccinated == False and random_person.id is not person._id:
+                if int1 > self.virus.repo_rate:
+                    random_person.id.append(self.newly_infected)
 
-        # TODO: Finish this method.
-        #  The possible cases you'll need to cover are listed below:
-            # random_person is vaccinated:
-            #     nothing happens to random person.
-            # random_person is already infected:
-            #     nothing happens to random person.
-            # random_person is healthy, but unvaccinated:
-            #     generate a random number between 0 and 1.  If that number is smaller
-            #     than repro_rate, random_person's ID should be appended to
-            #     Simulation object's newly_infected array, so that their .infected
-            #     attribute can be changed to True at the end of the time step.
-        # TODO: Call slogger method during this method.
         pass
 
     def _infect_newly_infected(self):
