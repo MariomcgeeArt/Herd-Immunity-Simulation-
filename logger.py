@@ -9,7 +9,7 @@ class Logger(object):
     def __init__(self, file_name):
         # TODO:  Finish this initialization method. The file_name passed should be the
         # full file name of the file that the logs will be written to.
-        self.file_name = None
+        self.file_name = file_name
 
     def write_metadata(self, pop_size, vacc_percentage, virus_name, mortality_rate,
                        basic_repro_num):
@@ -17,14 +17,10 @@ class Logger(object):
         The simulation class should use this method immediately to log the specific
         parameters of the simulation as the first line of the file.
         '''
-        # TODO: Finish this method. This line of metadata should be tab-delimited
-        # it should create the text file that we will store all logs in.
-        # TIP: Use 'w' mode when you open the file. For all other methods, use
-        # the 'a' mode to append a new log to the end, since 'w' overwrites the file.
-        # NOTE: Make sure to end every line with a '/n' character to ensure that each
-        # event logged ends up on a separate line!
-        pass
+        with open(self.file_name, 'w') as file:
+             file.write(f'Population size : {pop_size}, vacc_per: {vacc_percentage}, virus_name: {virus_name}, mortality_rate: {mortality_rate}, repro_num: {basic_repro_num}\n')
 
+          
     def log_interaction(self, person, random_person, random_person_sick=None,
                         random_person_vacc=None, did_infect=None):
         '''
@@ -36,12 +32,19 @@ class Logger(object):
         or the other edge cases:
             "{person.ID} didn't infect {random_person.ID} because {'vaccinated' or 'already sick'} \n"
         '''
-        # TODO: Finish this method. Think about how the booleans passed (or not passed)
-        # represent all the possible edge cases. Use the values passed along with each person,
-        # along with whether they are sick or vaccinated when they interact to determine
-        # exactly what happened in the interaction and create a String, and write to your logfile.
-        pass
+           with open(self.file_name, "a") as file:
+            
+            if random_person_sick :
+                file.write(f"{person._id} infection failed {random_person._id} person is sick \n")
 
+            elif random_person_vacc :
+                file.write(f"{person._id} infection failed  {random_person._id} person is vacinated \n")
+
+            elif did_infect:
+                file.write(f"{person._id} infects {random_person._id} \n")
+
+
+        
     def log_infection_survival(self, person, did_die_from_infection):
         ''' The Simulation object uses this method to log the results of every
         call of a Person object's .resolve_infection() method.
@@ -49,6 +52,12 @@ class Logger(object):
         The format of the log should be:
             "{person.ID} died from infection\n" or "{person.ID} survived infection.\n"
         '''
+            with open(self.file_name, "a") as file:
+            if not did_die_from_infection:
+                file.write(f"{person._id} died from infection \n")
+
+            else:
+                file.write(f"{person._id} survivied infection \n")
         # TODO: Finish this method. If the person survives, did_die_from_infection
         # should be False.  Otherwise, did_die_from_infection should be True.
         # Append the results of the infection to the logfile
@@ -69,6 +78,11 @@ class Logger(object):
         The format of this log should be:
             "Time step {time_step_number} ended, beginning {time_step_number + 1}\n"
         '''
+          with open(self.file_name, "a") as file:
+            file.write(f"Time step {time_step_number} ended, beginning {time_step_number + 1}\n")
+            file.write(f"Total infected: {total_infected}\n")
+            file.write(f"Total dead: {total_dead}\n")
+            file.write(f"Total times vaccine saved person: {vaccine_saves}")
         # TODO: Finish this method. This method should log when a time step ends, and a
         # new one begins.
         # NOTE: Here is an opportunity for a stretch challenge!
